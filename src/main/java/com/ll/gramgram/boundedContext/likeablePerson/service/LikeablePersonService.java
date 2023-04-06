@@ -52,15 +52,14 @@ public class LikeablePersonService {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
 
-    public LikeablePerson get(Integer id){
-        Optional<LikeablePerson> likeablePerson = this.likeablePersonRepository.findById(id);
-
-        return likeablePerson.get();
+    public Optional<LikeablePerson> FindById(Integer id){
+        return this.likeablePersonRepository.findById(id);
     }
 
 
     @Transactional
-    public void delete(LikeablePerson likeablePerson){
+    public RsData<LikeablePerson> delete(LikeablePerson likeablePerson){
         this.likeablePersonRepository.delete(likeablePerson);
+        return RsData.of("S-1","호감상대(%s)를 삭제하였습니다.".formatted(likeablePerson.getToInstaMember().getUsername()));
     }
 }

@@ -64,12 +64,16 @@ public class LikeablePersonController {
 
     @GetMapping("/delete/{id}")
     public String deleteLikePerson(@PathVariable("id")Integer id){
-        LikeablePerson likeablePerson = this.likeablePersonService.get(id);
+        LikeablePerson likeablePerson = this.likeablePersonService.FindById(id).orElse(null);
+        if(likeablePerson == null)
+            return rq.historyBack("이미 취소되었습니다.");
 
-        if(!likeablePerson.getFromInstaMember().getUsername().equals(rq.getMember().getInstaMember().getUsername())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다.");
+        if(!likeablePerson.getFromInstaMember().getId()
+                .equals(rq.getMember().getInstaMember().getId())){
+            return rq.historyBack("권한이 없습니다.");
+
         }
-        this.likeablePersonService.delete(likeablePerson);
-        return rq.redirectWithMsg("/likeablePerson/list","호감상대(%s)를 삭제하였습니다.".formatted(likeablePerson.getToInstaMember().getUsername()));
+        RsData<LikeablePerson> rsData = likeablePersonService.delete(likeablePerson);
+        return rq.redirectWithMsg("/likeablePerson/list",rsData.getMsg());
     }
 }
