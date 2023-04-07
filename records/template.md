@@ -8,9 +8,6 @@
 
 - ‘어떻게 개발을 진행 할 것인지에 대한 방향성’을 확인하는 과정이기 때문에 최대한 깊이있게 분석 후 진행해주시기 바랍니다.
 
-  ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c801d365-3d34-448d-ac9d-140a6bcfa9dd/Untitled.png)
-
-
 ### N주차 미션 요약
 
 ---

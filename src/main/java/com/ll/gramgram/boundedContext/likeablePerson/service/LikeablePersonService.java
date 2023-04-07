@@ -7,10 +7,13 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +50,16 @@ public class LikeablePersonService {
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
+    }
+
+    public Optional<LikeablePerson> FindById(Integer id){
+        return this.likeablePersonRepository.findById(id);
+    }
+
+
+    @Transactional
+    public RsData<LikeablePerson> delete(LikeablePerson likeablePerson){
+        this.likeablePersonRepository.delete(likeablePerson);
+        return RsData.of("S-1","호감상대(%s)를 삭제하였습니다.".formatted(likeablePerson.getToInstaMember().getUsername()));
     }
 }

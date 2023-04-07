@@ -9,12 +9,14 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -58,5 +60,20 @@ public class LikeablePersonController {
         }
 
         return "usr/likeablePerson/list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteLikePerson(@PathVariable("id")Integer id){
+        LikeablePerson likeablePerson = this.likeablePersonService.FindById(id).orElse(null);
+        if(likeablePerson == null)
+            return rq.historyBack("이미 취소되었습니다.");
+
+        if(!likeablePerson.getFromInstaMember().getId()
+                .equals(rq.getMember().getInstaMember().getId())){
+            return rq.historyBack("권한이 없습니다.");
+
+        }
+        RsData<LikeablePerson> rsData = likeablePersonService.delete(likeablePerson);
+        return rq.redirectWithMsg("/likeablePerson/list",rsData.getMsg());
     }
 }
