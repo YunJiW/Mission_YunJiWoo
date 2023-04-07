@@ -52,7 +52,7 @@ public class LikeablePersonService {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
 
-    public Optional<LikeablePerson> FindById(Integer id){
+    public Optional<LikeablePerson> FindById(Long id){
         return this.likeablePersonRepository.findById(id);
     }
 
