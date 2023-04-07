@@ -62,6 +62,7 @@ public class LikeablePersonController {
         return "usr/likeablePerson/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String deleteLikePerson(@PathVariable("id")Integer id){
         LikeablePerson likeablePerson = this.likeablePersonService.FindById(id).orElse(null);
@@ -71,7 +72,6 @@ public class LikeablePersonController {
         if(!likeablePerson.getFromInstaMember().getId()
                 .equals(rq.getMember().getInstaMember().getId())){
             return rq.historyBack("권한이 없습니다.");
-
         }
         RsData<LikeablePerson> rsData = likeablePersonService.delete(likeablePerson);
         return rq.redirectWithMsg("/likeablePerson/list",rsData.getMsg());
