@@ -62,8 +62,9 @@ public class LikeablePersonController {
         return "usr/likeablePerson/list";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteLikePerson(@PathVariable("id")Integer id){
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/delete/{id}")
+    public String deleteLikePerson(@PathVariable("id")Long id){
         LikeablePerson likeablePerson = this.likeablePersonService.FindById(id).orElse(null);
         if(likeablePerson == null)
             return rq.historyBack("이미 취소되었습니다.");
