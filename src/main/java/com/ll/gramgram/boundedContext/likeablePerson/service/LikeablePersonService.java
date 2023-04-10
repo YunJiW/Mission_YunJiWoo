@@ -65,8 +65,23 @@ public class LikeablePersonService {
 
 
     @Transactional
-    public RsData<LikeablePerson> delete(LikeablePerson likeablePerson){
+    public RsData delete(LikeablePerson likeablePerson){
         this.likeablePersonRepository.delete(likeablePerson);
-        return RsData.of("S-1","호감상대(%s)를 삭제하였습니다.".formatted(likeablePerson.getToInstaMember().getUsername()));
+
+        String likeCanceledUsername = likeablePerson.getToInstaMember().getUsername();
+        return RsData.of("S-1","호감상대(%s)를 삭제하였습니다.".formatted(likeCanceledUsername));
+    }
+
+    public RsData CanActorDelete(Member actor, LikeablePerson likeablePerson) {
+        if(likeablePerson == null)
+            return RsData.of("F-1","이미 삭제되었습니다.");
+
+        long actorInstaMemeberId = actor.getInstaMember().getId();
+        long fromInstaMemberId = likeablePerson.getFromInstaMember().getId();
+
+        if(actorInstaMemeberId != fromInstaMemberId)
+            return RsData.of("F-2","권한이 없습니다.");
+
+        return RsData.of("S-1","삭제가능");
     }
 }
