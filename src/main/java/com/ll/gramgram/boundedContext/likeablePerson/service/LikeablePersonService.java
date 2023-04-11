@@ -36,6 +36,8 @@ public class LikeablePersonService {
 
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
+
+
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
                 .fromInstaMember(fromInstaMember) // 호감을 표시하는 사람의 인스타 멤버
