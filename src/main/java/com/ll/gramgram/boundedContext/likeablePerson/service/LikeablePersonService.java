@@ -46,7 +46,13 @@ public class LikeablePersonService {
 
         for(LikeablePerson lk : findAll){
             if(lk.getToInstaMember().getUsername().equals(toInstaMember.getUsername())){
-                return RsData.of("F-3" ,"중복 발생");
+                if(lk.getAttractiveTypeCode() == attractiveTypeCode)
+                    return RsData.of("F-3" ,"중복 발생");
+                else{
+                    lk.setAttractiveTypeCode(attractiveTypeCode);
+                    likeablePersonRepository.save(lk);
+                    return RsData.of("S-2" ,"호감 이유 수정");
+                }
             }
         }
 
