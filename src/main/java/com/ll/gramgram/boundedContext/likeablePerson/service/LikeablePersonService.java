@@ -36,7 +36,13 @@ public class LikeablePersonService {
 
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
+        List<LikeablePerson> findAll = likeablePersonRepository.findByFromInstaMemberId(fromInstaMember.getId());
 
+        for(LikeablePerson lk : findAll){
+            if(lk.getToInstaMember().getUsername().equals(toInstaMember.getUsername())){
+                return RsData.of("F-3" ,"중복 발생");
+            }
+        }
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
