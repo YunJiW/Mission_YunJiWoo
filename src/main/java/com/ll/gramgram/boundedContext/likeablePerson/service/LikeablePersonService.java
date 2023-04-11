@@ -38,6 +38,12 @@ public class LikeablePersonService {
 
         List<LikeablePerson> findAll = likeablePersonRepository.findByFromInstaMemberId(fromInstaMember.getId());
 
+        boolean addPossible = checksize(fromInstaMember.getFromLikeablePeople().size());
+        if(addPossible){
+            return RsData.of("F-1" , "10명을 넘길수 없습니다.");
+        }
+
+
         for(LikeablePerson lk : findAll){
             if(lk.getToInstaMember().getUsername().equals(toInstaMember.getUsername())){
                 return RsData.of("F-3" ,"중복 발생");
@@ -61,6 +67,13 @@ public class LikeablePersonService {
         //너를 좋아하는 호감표시 생김
         toInstaMember.addToLikeablePerson(likeablePerson);
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
+    }
+
+    private boolean checksize(int size) {
+        if(size >= 10)
+            return true;
+
+        return false;
     }
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
