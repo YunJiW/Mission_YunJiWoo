@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
+import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
@@ -36,21 +37,26 @@ public class LikeablePersonService {
 
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
-        List<LikeablePerson> findAll = likeablePersonRepository.findByFromInstaMemberId(fromInstaMember.getId());
+        List<LikeablePerson> findFromInstaMember = likeablePersonRepository.findByFromInstaMemberId(fromInstaMember.getId());
 
-        boolean addPossible = checksize(fromInstaMember.getFromLikeablePeople().size());
+        boolean addPossible;
+        if(findFromInstaMember.isEmpty()){
+            addPossible = false;
+        }else{
+            addPossible = checksize(fromInstaMember.getFromLikeablePeople().size());
+        }
+
         if(addPossible){
             return RsData.of("F-1" , "10명을 넘길수 없습니다.");
         }
 
 
-        for(LikeablePerson lk : findAll){
+        for(LikeablePerson lk : findFromInstaMember ){
             if(lk.getToInstaMember().getUsername().equals(toInstaMember.getUsername())){
                 if(lk.getAttractiveTypeCode() == attractiveTypeCode)
                     return RsData.of("F-3" ,"중복 발생");
                 else{
                     lk.setAttractiveTypeCode(attractiveTypeCode);
-                    likeablePersonRepository.save(lk);
                     return RsData.of("S-2" ,"호감 이유 수정");
                 }
             }
@@ -76,7 +82,7 @@ public class LikeablePersonService {
     }
 
     private boolean checksize(int size) {
-        if(size >= 10)
+        if(size >= AppConfig.getLikeablePersonFromMax())
             return true;
 
         return false;
