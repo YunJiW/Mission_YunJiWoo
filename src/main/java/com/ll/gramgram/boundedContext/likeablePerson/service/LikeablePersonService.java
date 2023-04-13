@@ -51,7 +51,7 @@ public class LikeablePersonService {
         }
 
 
-        for(LikeablePerson lk : findFromInstaMember ){
+        for(LikeablePerson lk : findFromInstaMember){
             if(lk.getToInstaMember().getUsername().equals(toInstaMember.getUsername())){
                 if(lk.getAttractiveTypeCode() == attractiveTypeCode)
                     return RsData.of("F-3" ,"중복 발생");
@@ -99,6 +99,9 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData delete(LikeablePerson likeablePerson){
+        likeablePerson.getFromInstaMember().removeFromLikeablePerson(likeablePerson);
+        likeablePerson.getToInstaMember().removetoLikeablePerson(likeablePerson);
+
         this.likeablePersonRepository.delete(likeablePerson);
 
         String likeCanceledUsername = likeablePerson.getToInstaMember().getUsername();

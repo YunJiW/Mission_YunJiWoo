@@ -25,7 +25,7 @@ spring:
             scope:
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: '{baseUrl}/{action}/oauth2.0/code/{registrationId}'
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             client-authentication-method: POST
         provider:
           kakao:
