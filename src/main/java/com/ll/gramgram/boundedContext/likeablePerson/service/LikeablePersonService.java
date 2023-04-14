@@ -56,7 +56,7 @@ public class LikeablePersonService {
                 if(lk.getAttractiveTypeCode() == attractiveTypeCode)
                     return RsData.of("F-3" ,"중복 발생");
                 else{
-                    lk.setAttractiveTypeCode(attractiveTypeCode);
+                    lk.modifyAttractiveType(attractiveTypeCode);
                     return RsData.of("S-2" ,"호감 이유 수정");
                 }
             }
