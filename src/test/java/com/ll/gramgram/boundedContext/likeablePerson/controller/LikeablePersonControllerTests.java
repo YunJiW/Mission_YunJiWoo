@@ -1,6 +1,8 @@
 package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
 
+import com.ll.gramgram.base.appConfig.AppConfig;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,5 +150,14 @@ public class LikeablePersonControllerTests {
                         <span class="toInstaMember_attractiveTypeDisplayName">성격</span>
                         """.stripIndent().trim())));
         ;
+    }
+
+    @Test
+    @DisplayName("설정파일에 있는 최대가능호감표시 수 가져오기")
+    void t006() throws Exception {
+        long likeablePersonFromMax = AppConfig.getLikeablePersonFromMax();
+
+        Assertions.assertThat(likeablePersonFromMax).isEqualTo(10);
+
     }
 }

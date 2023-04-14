@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
+import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
@@ -36,6 +37,31 @@ public class LikeablePersonService {
 
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
+        List<LikeablePerson> findFromInstaMember = likeablePersonRepository.findByFromInstaMemberId(fromInstaMember.getId());
+
+        boolean addPossible;
+        if(findFromInstaMember.isEmpty()){
+            addPossible = false;
+        }else{
+            addPossible = checksize(fromInstaMember.getFromLikeablePeople().size());
+        }
+
+        if(addPossible){
+            return RsData.of("F-1" , "10명을 넘길수 없습니다.");
+        }
+
+
+        for(LikeablePerson lk : findFromInstaMember){
+            if(lk.getToInstaMember().getUsername().equals(toInstaMember.getUsername())){
+                if(lk.getAttractiveTypeCode() == attractiveTypeCode)
+                    return RsData.of("F-3" ,"중복 발생");
+                else{
+                    lk.modifyAttractiveType(attractiveTypeCode);
+                    return RsData.of("S-2" ,"호감 이유 수정");
+                }
+            }
+        }
+
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
                 .fromInstaMember(fromInstaMember) // 호감을 표시하는 사람의 인스타 멤버
@@ -55,6 +81,13 @@ public class LikeablePersonService {
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
 
+    private boolean checksize(int size) {
+        if(size >= AppConfig.getLikeablePersonFromMax())
+            return true;
+
+        return false;
+    }
+
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
@@ -66,6 +99,9 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData delete(LikeablePerson likeablePerson){
+        likeablePerson.getFromInstaMember().removeFromLikeablePerson(likeablePerson);
+        likeablePerson.getToInstaMember().removetoLikeablePerson(likeablePerson);
+
         this.likeablePersonRepository.delete(likeablePerson);
 
         String likeCanceledUsername = likeablePerson.getToInstaMember().getUsername();
