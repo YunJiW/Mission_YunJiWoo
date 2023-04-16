@@ -2,6 +2,7 @@ package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
 
 import com.ll.gramgram.base.appConfig.AppConfig;
+import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class LikeablePersonControllerTests {
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private LikeablePersonService likeablePersonService;
 
     @Test
     @DisplayName("등록 폼(인스타 인증을 안해서 폼 대신 메세지)")
@@ -160,4 +164,43 @@ public class LikeablePersonControllerTests {
         Assertions.assertThat(likeablePersonFromMax).isEqualTo(10);
 
     }
+
+    @Test
+    @DisplayName("한 회원은 호감표시를 할 수 있는 최대 인원이 정해져 있다.")
+    @WithUserDetails("user2")
+    void t012() throws Exception {
+
+        //given
+        for(int idx= 1; idx <=9;idx++){
+            ResultActions resultActions = mvc
+                    .perform(post("/likeablePerson/add")
+                            .with(csrf())
+                            .param("username",String.format("insta_user_test%d",idx))
+                            .param("attractiveTypeCode","2")
+                    )
+                    .andDo(print());
+            resultActions
+                    .andExpect(handler().handlerType(LikeablePersonController.class))
+                    .andExpect(handler().methodName("add"))
+                    .andExpect(status().is3xxRedirection());
+        }
+
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "insta_user111")
+                        .param("attractiveTypeCode", "1")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is4xxClientError());
+        ;
+    }
+
+
 }

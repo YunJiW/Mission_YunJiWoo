@@ -39,17 +39,6 @@ public class LikeablePersonService {
 
         List<LikeablePerson> findFromInstaMember = likeablePersonRepository.findByFromInstaMemberId(fromInstaMember.getId());
 
-        boolean addPossible;
-        if(findFromInstaMember.isEmpty()){
-            addPossible = false;
-        }else{
-            addPossible = checksize(fromInstaMember.getFromLikeablePeople().size());
-        }
-
-        if(addPossible){
-            return RsData.of("F-1" , "10명을 넘길수 없습니다.");
-        }
-
 
         for(LikeablePerson lk : findFromInstaMember){
             if(lk.getToInstaMember().getUsername().equals(toInstaMember.getUsername())){
@@ -61,6 +50,18 @@ public class LikeablePersonService {
                 }
             }
         }
+
+        boolean addPossible;
+        if(findFromInstaMember.isEmpty()){
+            addPossible = false;
+        }else{
+            addPossible = checksize(fromInstaMember.getFromLikeablePeople().size());
+        }
+
+        if(addPossible){
+            return RsData.of("F-1" , "%s명을 넘길수 없습니다.".formatted(AppConfig.getLikeablePersonFromMax()));
+        }
+
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
