@@ -51,7 +51,7 @@
                         <form class="!hidden" th:action="|/member/logout|" method="POST"></form>
                     </li>
                     <li th:if="${@rq.login}"><a href="/instaMember/connect"><i class="fa-brands fa-instagram"></i> 인스타 ID 입력</a></li>
-                    <li th:if="${@rq.login}"><a href="/likeablePerson/add"><i class="fa-solid fa-heart-circle-plus"></i> 호감표시</a></li>
+                    <li th:if="${@rq.login}"><a href="/likeablePerson/like"><i class="fa-solid fa-heart-circle-plus"></i> 호감표시</a></li>
                     <li th:if="${@rq.login}"><a href="/likeablePerson/list"><i class="fa-solid fa-list-ol"></i> 호감목록</a></li>
                 </ul>
             </div>
