@@ -112,6 +112,9 @@ public class LikeablePersonController {
     @AllArgsConstructor
     @Getter
     public static class ModifyForm{
+        @NotNull
+        @Min(1)
+        @Max(3)
         private final int attractiveTypeCode;
     }
 
