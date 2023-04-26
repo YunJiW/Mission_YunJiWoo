@@ -37,12 +37,6 @@ public class InstaMember extends InstaMemberBase {
     private List<LikeablePerson> toLikeablePeople = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "instaMember", cascade = CascadeType.ALL)
-    @OrderBy("id desc")
-    @Builder.Default
-    private List<InstaMemberSnapshot> instaMemberSnapshots = new ArrayList<>();
-
-
     public void addFromLikeablePerson(LikeablePerson likeablePerson) {
         fromLikeablePeople.add(0, likeablePerson);
     }
@@ -74,7 +68,7 @@ public class InstaMember extends InstaMemberBase {
         if (gender.equals("M") && attractiveTypeCode == 2) likesCountByGenderManAndAttractiveTypeCode2++;
         if (gender.equals("M") && attractiveTypeCode == 3) likesCountByGenderManAndAttractiveTypeCode3++;
 
-        saveSnapshot();
+
     }
 
     public void decreaseLikesCount(String gender, int attractiveTypeCode) {
@@ -85,46 +79,29 @@ public class InstaMember extends InstaMemberBase {
         if (gender.equals("M") && attractiveTypeCode == 2) likesCountByGenderManAndAttractiveTypeCode2--;
         if (gender.equals("M") && attractiveTypeCode == 3) likesCountByGenderManAndAttractiveTypeCode3--;
 
-        saveSnapshot();
+
 
     }
 
-    public boolean updateGender(String gender) {
-        if (gender.equals(this.gender)) return false;
-
-        boolean oldIsNUll = this.gender == null;
-
-        String oldGender = this.gender;
-
-        getFromLikeablePeople()
-                .forEach(likeablePerson -> {
-                    // 내가 좋아하는 사람 불러오기
-                    InstaMember toInstaMember = likeablePerson.getToInstaMember();
-                    toInstaMember.decreaseLikesCount(oldGender, likeablePerson.getAttractiveTypeCode());
-                    toInstaMember.increaseLikesCount(gender, likeablePerson.getAttractiveTypeCode());
-                });
-
+    public void updateGender(String gender) {
         this.gender = gender;
-
-        if(!oldIsNUll) saveSnapshot();
-
-        return true;
     }
 
 
-    public void saveSnapshot() {
-        InstaMemberSnapshot instaMemberSnapshot = InstaMemberSnapshot.builder()
-                .instaMember(this)
+    public InstaMemberSnapshot snapshot(String eventTypeCode) {
+        return InstaMemberSnapshot
+                .builder()
+                .eventTypeCode(eventTypeCode)
                 .username(username)
-                .likesCountByGenderWomanAndAttractiveTypeCode1(likesCountByGenderWomanAndAttractiveTypeCode1)
-                .likesCountByGenderWomanAndAttractiveTypeCode2(likesCountByGenderWomanAndAttractiveTypeCode2)
-                .likesCountByGenderWomanAndAttractiveTypeCode3(likesCountByGenderWomanAndAttractiveTypeCode3)
+                .instaMember(this)
+                .gender(gender)
                 .likesCountByGenderManAndAttractiveTypeCode1(likesCountByGenderManAndAttractiveTypeCode1)
                 .likesCountByGenderManAndAttractiveTypeCode2(likesCountByGenderManAndAttractiveTypeCode2)
                 .likesCountByGenderManAndAttractiveTypeCode3(likesCountByGenderManAndAttractiveTypeCode3)
+                .likesCountByGenderWomanAndAttractiveTypeCode1(likesCountByGenderWomanAndAttractiveTypeCode1)
+                .likesCountByGenderWomanAndAttractiveTypeCode2(likesCountByGenderWomanAndAttractiveTypeCode2)
+                .likesCountByGenderWomanAndAttractiveTypeCode3(likesCountByGenderWomanAndAttractiveTypeCode3)
                 .build();
-
-        instaMemberSnapshots.add(instaMemberSnapshot);
     }
 
 

@@ -45,29 +45,33 @@
         }
 
 
+
     </script>
 
     <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="JoinForm__submit(this); return false;">
         <div class=" flex items-center justify-center">
             <div class="max-w-2xl w-full px-4">
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">아이디</span>
-                    </label>
-                    <input type="text" name="username" maxlength="30" placeholder="아이디" class="input input-bordered">
-                </div>
+                <th:block th:if="false">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">아이디</span>
+                        </label>
+                        <input type="text" name="username" maxlength="30" placeholder="아이디"
+                               class="input input-bordered">
+                    </div>
 
-                <div class="form-control mb-4">
-                    <label class="label">
-                        <span class="label-text">비밀번호</span>
-                    </label>
-                    <input type="password" name="password" maxlength="30" placeholder="비밀번호"
-                           class="input input-bordered">
-                </div>
-                <button class="btn btn-block btn-primary gap-1 mb-4" type="submit">
-                    <i class="fa-solid fa-user-plus"></i>
-                    <span>회원가입</span>
-                </button>
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text">비밀번호</span>
+                        </label>
+                        <input type="password" name="password" maxlength="30" placeholder="비밀번호"
+                               class="input input-bordered">
+                    </div>
+                    <button class="btn btn-block btn-primary gap-1 mb-4" type="submit">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>회원가입</span>
+                    </button>
+                </th:block>
 
                 <a class="btn btn-block btn-outline gap-1 mb-4" href="/oauth2/authorization/kakao">
                     <i class="fa-solid fa-comment text-[color:#ffe812]"></i>
