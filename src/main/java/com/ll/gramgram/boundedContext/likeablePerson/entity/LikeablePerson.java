@@ -2,16 +2,12 @@ package com.ll.gramgram.boundedContext.likeablePerson.entity;
 
 import com.ll.gramgram.base.baseEntity.BaseEntity;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 @NoArgsConstructor
 @ToString(callSuper = true)
@@ -31,6 +27,17 @@ public class LikeablePerson extends BaseEntity {
 
     private int attractiveTypeCode; // 매력포인트(1=외모, 2=성격, 3=능력)
 
+    public boolean updateAttractionTypeCode(int attractiveTypeCode) {
+        if (this.attractiveTypeCode == attractiveTypeCode) {
+            return false;
+        }
+        toInstaMember.decreaseLikesCount(fromInstaMember.getGender(), this.attractiveTypeCode);
+        toInstaMember.increaseLikesCount(fromInstaMember.getGender(), attractiveTypeCode);
+
+        this.attractiveTypeCode = attractiveTypeCode;
+        return true;
+    }
+
     public String getAttractiveTypeDisplayName() {
         return switch (attractiveTypeCode) {
             case 1 -> "외모";
@@ -38,6 +45,7 @@ public class LikeablePerson extends BaseEntity {
             default -> "능력";
         };
     }
+
     public String getAttractiveTypeDisplayNameWithIcon() {
         return switch (attractiveTypeCode) {
             case 1 -> "<i class=\"fa-solid fa-person-rays\"></i>";
@@ -46,7 +54,7 @@ public class LikeablePerson extends BaseEntity {
         } + "&nbsp;" + getAttractiveTypeDisplayName();
     }
 
-    public void modifyAttractiveType(int attractiveTypeCode){
+    public void modifyAttractiveType(int attractiveTypeCode) {
         this.attractiveTypeCode = attractiveTypeCode;
     }
 }

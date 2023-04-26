@@ -67,7 +67,7 @@
                         </div>
                         <div class="mt-2">
                             <i class="fa-solid fa-heart"></i>&nbsp;<span
-                                th:text="${#numbers.formatInteger(likes, 0, 'COMMA')}"></span>
+                                th:text="${#numbers.formatInteger(@rq.member.instaMember.likes,0,'COMMA')}"></span>
                         </div>
                     </div>
 
@@ -79,7 +79,7 @@
                         </div>
                         <div class="mt-2">
                             <i class="fa-solid fa-person-dress"></i>&nbsp;<span
-                                th:text="${#numbers.formatInteger(likesByGenderWomen, 0, 'COMMA')}"></span>
+                                th:text="${#numbers.formatInteger(@rq.member.instaMember.likesCountByGenderWoman,0,'COMMA')}"></span>
                         </div>
                     </div>
 
@@ -89,7 +89,7 @@
                         </div>
                         <div class="mt-2">
                             <i class="fa-solid fa-person"></i>&nbsp;<span
-                                th:text="${#numbers.formatInteger(likesByGenderMen, 0, 'COMMA')}"></span>
+                                th:text="${#numbers.formatInteger(@rq.member.instaMember.likesCountByGenderMan, 0, 'COMMA')}"></span>
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                         </div>
                         <div class="mt-2">
                             <i class="fa-solid fa-heart"></i>&nbsp;<span
-                                th:text="${#numbers.formatInteger(likes, 0, 'COMMA')}"></span>
+                                th:text="${#numbers.formatInteger(@rq.member.instaMember.likes, 0, 'COMMA')}"></span>
                         </div>
                     </div>
 
@@ -119,7 +119,7 @@
                         </div>
                         <div class="mt-2">
                             <i class="fa-solid fa-person-rays"></i>&nbsp;<span
-                                th:text="${#numbers.formatInteger(likesByAttractiveTypeCode1, 0, 'COMMA')}"></span>
+                                th:text="${#numbers.formatInteger(@rq.member.instaMember.likesCountByAttractionTypeCode2, 0, 'COMMA')}"></span>
                         </div>
                     </div>
 
@@ -129,7 +129,7 @@
                         </div>
                         <div class="mt-2">
                             <i class="fa-regular fa-face-smile"></i>&nbsp;<span
-                                th:text="${#numbers.formatInteger(likesByAttractiveTypeCode2, 0, 'COMMA')}"></span>
+                                th:text="${#numbers.formatInteger(@rq.member.instaMember.likesCountByAttractionTypeCode2, 0, 'COMMA')}"></span>
                         </div>
                     </div>
 
@@ -139,7 +139,7 @@
                         </div>
                         <div class="mt-2">
                             <i class="fa-solid fa-people-roof"></i>&nbsp;<span
-                                th:text="${#numbers.formatInteger(likesByAttractiveTypeCode3, 0, 'COMMA')}"></span>
+                                th:text="${#numbers.formatInteger(@rq.member.instaMember.likesCountByAttractionTypeCode3, 0, 'COMMA')}"></span>
                         </div>
                     </div>
                 </div>

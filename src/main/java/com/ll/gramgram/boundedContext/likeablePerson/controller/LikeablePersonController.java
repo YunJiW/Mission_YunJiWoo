@@ -7,8 +7,7 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +41,13 @@ public class LikeablePersonController {
         @NotBlank
         @Size(min = 3,max = 30)
         private final String username;
-        @NotBlank
-        @Size(min = 1,max = 1)
+
+        @NotNull
+        @Min(1)
+        @Max(3)
         private final int attractiveTypeCode;
     }
+
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/like")
@@ -121,7 +123,7 @@ public class LikeablePersonController {
         if(rsData.isFail()){
             return rq.historyBack(rsData);
         }
-        return rq.redirectWithMsg("/likeablePerson/list",rsData);
+        return rq.redirectWithMsg("/usr/likeablePerson/list",rsData);
     }
 
 

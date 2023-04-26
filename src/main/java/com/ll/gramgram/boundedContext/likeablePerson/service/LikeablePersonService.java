@@ -43,10 +43,9 @@ public class LikeablePersonService {
 
         for(LikeablePerson lk : findFromInstaMember){
             if(lk.getToInstaMember().getUsername().equals(toInstaMember.getUsername())){
-                if(lk.getAttractiveTypeCode() == attractiveTypeCode)
+                if(!lk.updateAttractionTypeCode(attractiveTypeCode))
                     return RsData.of("F-3" ,"중복 발생");
                 else{
-                    lk.modifyAttractiveType(attractiveTypeCode);
                     return RsData.of("S-2" ,"호감 이유 수정");
                 }
             }
@@ -80,6 +79,10 @@ public class LikeablePersonService {
 
         //너를 좋아하는 호감표시 생김
         toInstaMember.addToLikeablePerson(likeablePerson);
+
+
+        toInstaMember.increaseLikesCount(fromInstaMember.getGender(),attractiveTypeCode);
+
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
 
@@ -101,6 +104,10 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData delete(LikeablePerson likeablePerson){
+
+        likeablePerson.getToInstaMember().decreaseLikesCount(likeablePerson.getFromInstaMember().getGender(),likeablePerson.getAttractiveTypeCode());
+
+
         likeablePerson.getFromInstaMember().removeFromLikeablePerson(likeablePerson);
         likeablePerson.getToInstaMember().removetoLikeablePerson(likeablePerson);
 
