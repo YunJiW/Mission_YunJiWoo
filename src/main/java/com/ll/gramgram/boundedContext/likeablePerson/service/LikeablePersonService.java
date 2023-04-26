@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -105,6 +108,10 @@ public class LikeablePersonService {
     @Transactional
     public RsData delete(LikeablePerson likeablePerson){
 
+        long diff = ChronoUnit.SECONDS.between(likeablePerson.getModifyDate(), LocalDateTime.now());
+        if(diff < 10800)
+            return RsData.of("F-5","호감표시를 하고 3시간 이내에 삭제가 불가능합니다.");
+
         likeablePerson.getToInstaMember().decreaseLikesCount(likeablePerson.getFromInstaMember().getGender(),likeablePerson.getAttractiveTypeCode());
 
 
@@ -143,6 +150,9 @@ public class LikeablePersonService {
         if(canModifyRsData.isFail()){
             return canModifyRsData;
         }
+        long diff = ChronoUnit.SECONDS.between(likeablePerson.getModifyDate(), LocalDateTime.now());
+        if(diff < 10800)
+            return RsData.of("F-5","호감표시를 하고 3시간 이내에 수정이 불가능합니다.");
 
         likeablePerson.modifyAttractiveType(attractiveTypeCode);
 
