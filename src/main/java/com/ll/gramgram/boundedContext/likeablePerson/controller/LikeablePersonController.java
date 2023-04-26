@@ -7,6 +7,8 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Controller
-@RequestMapping("/likeablePerson")
+@RequestMapping("/usr/likeablePerson")
 @RequiredArgsConstructor
 public class LikeablePersonController {
     private final Rq rq;
@@ -30,13 +32,18 @@ public class LikeablePersonController {
 
     @GetMapping("/like")
     public String showLike() {
-        return "usr/likeablePerson/like";
+        return "/usr/likeablePerson/like";
     }
 
     @AllArgsConstructor
     @Getter
     public static class LikeForm {
+
+        @NotBlank
+        @Size(min = 3,max = 30)
         private final String username;
+        @NotBlank
+        @Size(min = 1,max = 1)
         private final int attractiveTypeCode;
     }
 
@@ -49,7 +56,7 @@ public class LikeablePersonController {
             return rq.historyBack(createRsData);
         }
 
-        return rq.redirectWithMsg("/likeablePerson/list", createRsData);
+        return rq.redirectWithMsg("/usr/likeablePerson/list", createRsData);
     }
 
     @GetMapping("/list")
@@ -62,7 +69,7 @@ public class LikeablePersonController {
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
-        return "usr/likeablePerson/list";
+        return "/usr/likeablePerson/list";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -81,7 +88,7 @@ public class LikeablePersonController {
         }
 
 
-        return rq.redirectWithMsg("/likeablePerson/list",deleteRsData);
+        return rq.redirectWithMsg("/usr/likeablePerson/list",deleteRsData);
     }
 
     @PreAuthorize("isAuthenticated()")
