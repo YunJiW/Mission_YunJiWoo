@@ -30,7 +30,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
 
-
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
         String oauthId = switch (providerTypeCode){
