@@ -6,7 +6,7 @@
 
 <body>
 
-<main class="min-h-screen flex flex-col" layout:fragment="main" >
+<main class="min-h-screen flex flex-col" layout:fragment="main">
     <script>
         function ConnectForm__submit(form) {
             // username 이(가) 올바른지 체크
@@ -35,6 +35,7 @@
 
             form.submit(); // 폼 발송
         }
+
     </script>
 
     <form th:action method="POST" class="p-10 flex flex-col gap-6"
@@ -49,10 +50,15 @@
                 <form class="flex flex-col gap-6">
                     <div class="form-control">
                         <label class="label">
-                            <span class="label-text">인스타아이디</span>
+                            <span class="label-text">
+                        <i class="fa-brands fa-instagram"></i>인스타 아이디</span>
                         </label>
-                        <input type="text" name="username" placeholder="인스타아이디" class="input input-bordered" autofocus onchange="$(this).keyup();" onkeyup="$(this).next().children(':last-child').text(this.value.trim());" onpaste="setTimeoutZero(() => $(this).keyup());" value="abcd" />
-                        <a href="#" onclick="$(this).attr('href', $(this).text().replaceAll(' ', ''));" target="_blank" class="block mt-3 text-sm break-all">
+                        <input type="text" name="username" placeholder="인스타아이디" class="input input-bordered" autofocus
+                               onchange="$(this).keyup();"
+                               onkeyup="$(this).next().children(':last-child').text(this.value.trim());"
+                               onpaste="setTimeoutZero(() => $(this).keyup());" value="abcd"/>
+                        <a href="#" onclick="$(this).attr('href', $(this).text().replaceAll(' ', ''));" target="_blank"
+                           class="block mt-3 text-sm break-all">
                             <span>https://instagram.com/</span><span class="text-red-300"></span>
                         </a>
                         <script>
@@ -61,12 +67,12 @@
             // input[name="username"]:last : 태그가 input 이고 name 속성의 값이 username 인 녀석들 중에서 꼴등 한명 선택
             // .keyup(); : 강제로 keyup 이벤트 트리거(이벤트를 강제로 발동시킨다.)
             $(`input[name="username"]:last`).keyup();
-          </script>
+                        </script>
                     </div>
 
                     <div class="form-control mb-4">
-                        <label class="label">
-                            <span class="label-text">성별</span>
+                        <label class="label"><span class="label-text"><i class="fa-solid fa-person-half-dress"></i>
+                            성별</span>
                         </label>
 
                         <!-- 라벨을 클릭하면 라벨의 하위요소인 버튼(체크,라디오,일반 등)이 클릭되는 효과) -->
