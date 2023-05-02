@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDateTime;
+
 @Configuration
 public class AppConfig {
 
@@ -22,5 +24,10 @@ public class AppConfig {
     @Value("${custom.likeablePerson.from.max}")
     public void setLikeablePersonFromMax(long likeablePersonFromMax){
         AppConfig.likeablePersonFromMax = likeablePersonFromMax;
+    }
+
+
+    public static LocalDateTime genLikeablePersonModifyUnlockDate(){
+        return LocalDateTime.now().plusSeconds(likeablePersonFromMax);
     }
 }
