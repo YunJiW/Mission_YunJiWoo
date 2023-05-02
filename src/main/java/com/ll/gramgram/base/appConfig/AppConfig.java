@@ -28,6 +28,6 @@ public class AppConfig {
 
 
     public static LocalDateTime genLikeablePersonModifyUnlockDate(){
-        return LocalDateTime.now().plusSeconds(likeablePersonFromMax);
+        return LocalDateTime.now().plusSeconds(likeablePersonModifyCoolTime);
     }
 }

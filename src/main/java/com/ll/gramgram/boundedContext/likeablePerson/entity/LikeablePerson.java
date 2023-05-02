@@ -69,4 +69,20 @@ public class LikeablePerson extends BaseEntity {
     public void updatemodifydate(LocalDateTime modifyUnlockDate){
         this.modifyUnlockDate = modifyUnlockDate;
     }
+
+    // 초 단위에서 올림 해주세요.
+    public String getModifyUnlockDateRemainStrHuman() {
+        int hour = modifyUnlockDate.getHour();
+        int min = modifyUnlockDate.getMinute();
+        if(min - LocalDateTime.now().getMinute() < 0)
+        {
+            hour = hour -1;
+            min += 60;
+        }
+        return "%d시간 %d 분".formatted(hour - LocalDateTime.now().getHour(),min- LocalDateTime.now().getMinute());
+    }
+
+    public boolean isModifyUnlocked() {
+        return modifyUnlockDate.isBefore(LocalDateTime.now());
+    }
 }
