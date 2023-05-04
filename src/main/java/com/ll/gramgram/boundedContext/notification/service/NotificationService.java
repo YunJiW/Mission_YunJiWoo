@@ -23,7 +23,7 @@ public class NotificationService {
 
     @Transactional
     public RsData<Notification> makeLike(LikeablePerson likeablePerson) {
-        return make(likeablePerson, "LiKE", 0, null);
+        return make(likeablePerson, "LIKE", 0, null);
     }
 
 
@@ -32,6 +32,7 @@ public class NotificationService {
         return make(likeablePerson, "ModifyAttractiveType", oldAttractiveTypeCode, likeablePerson.getFromInstaMember().getGender());
     }
 
+    @Transactional
     private RsData<Notification> make(LikeablePerson likeablePerson, String typeCode, int oldAttractiveType, String oldGender) {
         Notification notification = Notification.builder()
                 .typeCode(typeCode)

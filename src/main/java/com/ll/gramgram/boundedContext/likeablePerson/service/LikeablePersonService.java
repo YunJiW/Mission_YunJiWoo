@@ -1,6 +1,8 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
 import com.ll.gramgram.base.appConfig.AppConfig;
+import com.ll.gramgram.base.event.EventAfterLike;
+import com.ll.gramgram.base.event.EventAfterModifyAttractiveType;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
@@ -8,6 +10,7 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,8 @@ import java.util.Optional;
 public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
+
+    private final ApplicationEventPublisher publisher;
 
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
@@ -49,6 +54,7 @@ public class LikeablePersonService {
                 if(!lk.updateAttractionTypeCode(attractiveTypeCode))
                     return RsData.of("F-3" ,"중복 발생");
                 else{
+                    publisher.publishEvent(new EventAfterModifyAttractiveType(this,lk,lk.getAttractiveTypeCode(),attractiveTypeCode));
                     return RsData.of("S-2" ,"호감 이유 수정");
                 }
             }
@@ -84,6 +90,8 @@ public class LikeablePersonService {
         //너를 좋아하는 호감표시 생김
         toInstaMember.addToLikeablePerson(likeablePerson);
 
+        publisher.publishEvent(new EventAfterLike(this,likeablePerson));
+
 
         toInstaMember.increaseLikesCount(fromInstaMember.getGender(),attractiveTypeCode);
 
@@ -112,11 +120,10 @@ public class LikeablePersonService {
         if(likeablePerson.isModifyUnlocked())
             return RsData.of("F-5","호감표시를 하고 %s 이내에 삭제가 불가능합니다.".formatted(likeablePerson.getModifyUnlockDateRemainStrHuman()));
 
-        likeablePerson.getToInstaMember().decreaseLikesCount(likeablePerson.getFromInstaMember().getGender(),likeablePerson.getAttractiveTypeCode());
-
+        publisher.publishEvent(new EventAfterLike(this,likeablePerson));
 
         likeablePerson.getFromInstaMember().removeFromLikeablePerson(likeablePerson);
-        likeablePerson.getToInstaMember().removetoLikeablePerson(likeablePerson);
+        likeablePerson.getToInstaMember().removeToLikeablePerson(likeablePerson);
 
         this.likeablePersonRepository.delete(likeablePerson);
         likeablePerson.updatemodifydate(AppConfig.genLikeablePersonModifyUnlockDate());
