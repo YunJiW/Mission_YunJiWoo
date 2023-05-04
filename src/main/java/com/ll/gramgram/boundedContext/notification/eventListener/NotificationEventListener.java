@@ -23,6 +23,9 @@ public class NotificationEventListener {
     @EventListener
     public void listen(EventAfterModifyAttractiveType event) {
         //누군가의 호감사유가 변경되었을 경우
+        LikeablePerson likeablePerson = event.getLikeablePerson();
+
+        notificationService.makeModifyAttractive(likeablePerson,event.getOldAttractiveTypeCode());
 
     }
 
