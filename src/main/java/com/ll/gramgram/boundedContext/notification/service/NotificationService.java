@@ -18,7 +18,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     public List<Notification> findByToInstaMember(InstaMember toInstaMember) {
-        return notificationRepository.findByToInstaMember(toInstaMember);
+        return notificationRepository.findByToInstaMemberOrderByIdDesc(toInstaMember);
     }
 
     @Transactional
@@ -49,4 +49,22 @@ public class NotificationService {
         return RsData.of("S-2", "알림메세지 생성", notification);
     }
 
+    public List<Notification> findByToInstaMember_username(String username){
+        return notificationRepository.findByToInstaMember_usernameOrderByIdDesc(username);
+    }
+
+    @Transactional
+    public RsData markAsRead(List<Notification> notifications){
+        notifications
+                .stream()
+                .filter(notification -> !notification.isRead())
+                .forEach(Notification::markAsRead);
+
+
+        return RsData.of("S-1", "읽음 처리 되었습니다.");
+    }
+
+    public boolean countUnreadNotificationsByToInstaMember(InstaMember instaMember) {
+        return notificationRepository.countByToInstaMemberAndReadDateNull(instaMember) > 0;
+    }
 }
