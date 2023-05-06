@@ -23,11 +23,10 @@ public class NotificationEventListener {
     @EventListener
     public void listen(EventAfterLike event) {
 
-        System.out.println("왜 안되니?");
         //누군가의 호감표시를 한 경우
-        //LikeablePerson likeablePerson = event.getLikeablePerson();
+        LikeablePerson likeablePerson = event.getLikeablePerson();
 
-        //notificationService.makeLike(likeablePerson);
+        notificationService.makeLike(likeablePerson);
     }
 
     @EventListener
