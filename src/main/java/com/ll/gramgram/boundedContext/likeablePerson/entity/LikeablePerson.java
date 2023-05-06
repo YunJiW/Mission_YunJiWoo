@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @ToString(callSuper = true)
 @Entity
@@ -17,6 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class LikeablePerson extends BaseEntity {
 
+    private LocalDateTime modifyUnlockDate;
     @ManyToOne
     @ToString.Exclude
     private InstaMember fromInstaMember; // 호감을 표시한 사람(인스타 멤버)
@@ -61,5 +64,25 @@ public class LikeablePerson extends BaseEntity {
 
     public void modifyAttractiveType(int attractiveTypeCode) {
         this.attractiveTypeCode = attractiveTypeCode;
+    }
+
+    public void updatemodifydate(LocalDateTime modifyUnlockDate){
+        this.modifyUnlockDate = modifyUnlockDate;
+    }
+
+    // 초 단위에서 올림 해주세요.
+    public String getModifyUnlockDateRemainStrHuman() {
+        int hour = modifyUnlockDate.getHour();
+        int min = modifyUnlockDate.getMinute();
+        if(min - LocalDateTime.now().getMinute() < 0)
+        {
+            hour = hour -1;
+            min += 60;
+        }
+        return "%d시간 %d 분".formatted(hour - LocalDateTime.now().getHour(),min- LocalDateTime.now().getMinute());
+    }
+
+    public boolean isModifyUnlocked() {
+        return modifyUnlockDate.isBefore(LocalDateTime.now());
     }
 }

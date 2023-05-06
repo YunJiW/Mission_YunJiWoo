@@ -53,7 +53,7 @@ public class InstaMember extends InstaMemberBase {
         fromLikeablePeople.removeIf(e -> e.equals(likeablePerson));
     }
 
-    public void removetoLikeablePerson(LikeablePerson likeablePerson) {
+    public void removeToLikeablePerson(LikeablePerson likeablePerson) {
         toLikeablePeople.removeIf(e -> e.equals(likeablePerson));
     }
 

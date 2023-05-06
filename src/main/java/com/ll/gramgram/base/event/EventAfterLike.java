@@ -10,6 +10,6 @@ public class EventAfterLike extends ApplicationEvent {
 
     public EventAfterLike(Object source,LikeablePerson likeablePerson){
         super(source);
-        this.likeablePerson =likeablePerson;
+        this.likeablePerson = likeablePerson;
     }
 }

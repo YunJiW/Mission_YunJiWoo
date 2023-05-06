@@ -66,10 +66,9 @@ public class InstaMemberService {
     public RsData<InstaMember> findByUsernameOrCreate(String username) {
         Optional<InstaMember> opInstaMember = findByUsername(username);
 
-        if (opInstaMember.isPresent()) return RsData.of("S-2", "인스타계정이 등록되었습니다.", opInstaMember.get());
-
-        // 아직 성별을 알 수 없으니, 언노운의 의미로 U 넣음
-        return create(username, "U");
+        return opInstaMember
+                .map(instaMember -> RsData.of("S-2", "인스타계정이 등록되었습니다.", instaMember))
+                .orElseGet(() -> create(username, "U"));
     }
 
     @Transactional
@@ -126,6 +125,7 @@ public class InstaMemberService {
         toInstaMember.decreaseLikesCount(fromInstaMember.getGender(), likeablePerson.getAttractiveTypeCode());
 
         InstaMemberSnapshot snapshot = toInstaMember.snapshot("CancelLike");
+
 
         saveSnapshot(snapshot);
     }

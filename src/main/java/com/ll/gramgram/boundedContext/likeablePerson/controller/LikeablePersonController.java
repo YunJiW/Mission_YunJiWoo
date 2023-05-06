@@ -31,7 +31,7 @@ public class LikeablePersonController {
 
     @GetMapping("/like")
     public String showLike() {
-        return "/usr/likeablePerson/like";
+        return "usr/likeablePerson/like";
     }
 
     @AllArgsConstructor
@@ -61,6 +61,7 @@ public class LikeablePersonController {
         return rq.redirectWithMsg("/usr/likeablePerson/list", createRsData);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
     public String showLike(Model model) {
         InstaMember instaMember = rq.getMember().getInstaMember();
@@ -71,7 +72,7 @@ public class LikeablePersonController {
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
-        return "/usr/likeablePerson/list";
+        return "usr/likeablePerson/list";
     }
 
     @PreAuthorize("isAuthenticated()")
