@@ -139,7 +139,7 @@ public class LikeablePersonController {
         if(instaMember != null){
             List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
 
-            model.addAttribute("likeabelPerson",likeablePeople);
+            model.addAttribute("likeablePeople",likeablePeople);
         }
         return "usr/likeablePerson/toList";
     }
