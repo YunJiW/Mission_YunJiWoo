@@ -8,14 +8,17 @@ import com.ll.gramgram.standard.util.Ut;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
+import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 @Component
@@ -24,15 +27,21 @@ public class Rq {
     private final MemberService memberService;
 
     private final NotificationService notificationService;
+
+    private final MessageSource messageSource;
+    private final LocaleResolver localeResolver;
+    private Locale locale;
     private final HttpServletRequest req;
     private final HttpServletResponse resp;
     private final HttpSession session;
     private final User user;
     private Member member = null; // 레이지 로딩, 처음부터 넣지 않고, 요청이 들어올 때 넣는다.
 
-    public Rq(MemberService memberService,NotificationService notificationService, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+    public Rq(MemberService memberService, NotificationService notificationService, MessageSource messageSource, LocaleResolver localeResolver, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
         this.memberService = memberService;
         this.notificationService = notificationService;
+        this.messageSource = messageSource;
+        this.localeResolver = localeResolver;
         this.req = req;
         this.resp = resp;
         this.session = session;
@@ -47,6 +56,7 @@ public class Rq {
             this.user = null;
         }
     }
+
     public boolean isAdmin() {
         if (isLogout()) return false;
 
@@ -61,8 +71,6 @@ public class Rq {
         String referer = savedRequest.getRedirectUrl();
         return referer != null && referer.contains("/adm");
     }
-
-
 
 
     // 로그인 되어 있는지 체크
@@ -139,12 +147,12 @@ public class Rq {
         session.removeAttribute(name);
     }
 
-    public boolean hasUnreadNotifications(){
-        if(isLogout()) return false;
+    public boolean hasUnreadNotifications() {
+        if (isLogout()) return false;
 
         Member actor = getMember();
 
-        if(!actor.hasConnectedInstaMember())
+        if (!actor.hasConnectedInstaMember())
             return false;
 
         return notificationService.countUnreadNotificationsByToInstaMember(getMember().getInstaMember());
@@ -155,5 +163,15 @@ public class Rq {
         Map<String, String[]> parameterMap = req.getParameterMap();
 
         return Ut.json.toStr(parameterMap);
+    }
+
+    public String getCText(String code, String... args) {
+        return messageSource.getMessage(code, args, getLocale());
+    }
+
+    private Locale getLocale() {
+        if (locale == null) locale = localeResolver.resolveLocale(req);
+
+        return locale;
     }
 }

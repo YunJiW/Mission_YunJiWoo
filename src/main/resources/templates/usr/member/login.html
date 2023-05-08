@@ -1,26 +1,36 @@
 <html layout:decorate="~{usr/layout/layout.html}">
 
 <head>
-    <title>로그인</title>
+    <title th:text="#{c.pageNameStart}"></title>
 </head>
 
 <body>
 
 <main class="min-h-screen flex flex-col" layout:fragment="main">
+
+    <div class="hidden" id="msg-loginFormNeedInputUsername" th:text="#{c.loginFormNeedInputUsername}"></div>
+    <div class="hidden" id="msg-loginFormNeedInputUsernameMoreThan"
+         th:text="${@rq.getCText('c.loginFormNeedInputUsernameMoreThan', loginFormInputUsernameValueMinLength)}"></div>
+    <div class="hidden" id="msg-loginFormNeedInputPassword" th:text="#{c.loginFormNeedInputPassword}"></div>
+    <div class="hidden" id="msg-loginFormNeedInputPasswordMoreThan"
+         th:text="#{c.loginFormNeedInputPasswordMoreThan(${loginFormInputPasswordValueMinLength})}"></div>
+
     <script>
+        const loginFormInputUsernameValueMinLength = 4;
+        const loginFormInputPasswordValueMinLength = 4;
         function LoginForm__submit(form) {
             // username 이(가) 올바른지 체크
 
             form.username.value = form.username.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
 
             if (form.username.value.length == 0) {
-                toastWarning('아이디를 입력해주세요.');
+                toastWarning($("#msg-loginFormNeedInputUsername").text());
                 form.username.focus();
                 return;
             }
 
-            if (form.username.value.length < 4) {
-                toastWarning('아이디를 4자 이상 입력해주세요.');
+            if (form.username.value.length < loginFormInputUsernameValueMinLength) {
+                toastWarning($("#msg-loginFormNeedInputUsernameMoreThan").text());
                 form.username.focus();
                 return;
             }
@@ -30,13 +40,14 @@
             form.password.value = form.password.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
 
             if (form.password.value.length == 0) {
+                toastWarning($("#msg-loginFormNeedInputPassword").text());
                 form.password.focus();
-                toastWarning('비밀번호를 입력해주세요.');
+                toastWarning(msgNeedInputPassword);
                 return;
             }
 
-            if (form.password.value.length < 4) {
-                toastWarning('비밀번호를 4자 이상 입력해주세요.');
+            if (form.password.value.length < loginFormInputPasswordValueMinLength) {
+                toastWarning($("#msg-loginFormNeedInputPasswordMoreThan").text());
                 form.password.focus();
                 return;
             }
@@ -45,53 +56,58 @@
         }
 
 
+
     </script>
     <form th:action method="POST" class="p-10 flex flex-col gap-6" onsubmit="LoginForm__submit(this); return false;">
         <div class=" flex items-center justify-center">
             <div class="max-w-2xl w-full px-4">
                 <h1 class="mb-4">
                     <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                    시작하기
+                    <span th:text="#{c.pageNameStart}"></span>
                 </h1>
                 <th:block th:if="${@rq.refererAdminPage or param.admin != null }">
                     <div class="form-control">
                         <label class="label">
-                            <span class="label-text">아이디</span>
+                            <i class="fa-regular fa-id-badge"></i>
+                            <span th:text="#{c.loginFormUsername}"></span>
                         </label>
-                        <input type="text" name="username" maxlength="30" placeholder="아이디"
-                               class="input input-bordered">
+                        <input type="text" name="username" th:placeholder="#{c.loginFormUsername}"
+                               class="input input-bordered" autofocus/>
                     </div>
                     <div class="form-control mb-4">
                         <label class="label">
-                            <span class="label-text">비밀번호</span>
+                            <span class="label-text">
+                                <i class="fa-solid fa-key"></i>
+                                <span th:text="#{c.loginFormPassword}"></span>
+                            </span>
                         </label>
-                        <input type="password" name="password" maxlength="30" placeholder="비밀번호"
-                               class="input input-bordered">
+                        <input type="password" name="password" th:placeholder="#{c.loginFormPassword}"
+                               class="input input-bordered"/>
                     </div>
                     <button class="btn btn-block btn-primary gap-1 mb-4" type="submit">
                         <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                        <span>로그인</span>
+                        <span class="normal-case" th:text="#{c.pageNameStart}"></span>
                     </button>
 
                 </th:block>
                 <a class="btn btn-block btn-outline gap-1 mb-4" href="/oauth2/authorization/kakao">
                     <i class="fa-solid fa-comment text-[color:#ffe812]"></i>
-                    카카오로 로그인하기
+                    <span class="normal-case" th:text="#{c.startWithKakao}"></span>
                 </a>
 
                 <a class="btn btn-block btn-outline gap-1 mb-4" href="/oauth2/authorization/naver">
                     <i class="fa-solid fa-n text-[color:#2DB400]"></i>
-                    <span>네이버 로그인</span>
+                    <span class="normal-case" th:text="#{c.startWithNaver}"></span>
                 </a>
 
                 <a class="btn btn-block btn-outline gap-1 mb-4" href="/oauth2/authorization/google">
                     <i class="fa-brands fa-google text-[color:#ff4000]"></i>
-                    <span>구글 로그인</span>
+                    <span class="normal-case" th:text="#{c.startWithGoogle}"></span>
                 </a>
 
                 <a class="btn btn-block btn-outline gap-1" href="/oauth2/authorization/facebook">
                     <i class="fa-brands fa-facebook-f"></i>
-                    <span>페이스북 로그인</span>
+                    <span class="normal-case" th:text="#{c.startWithFacebook}"></span>
                 </a>
             </div>
         </div>
@@ -100,7 +116,7 @@
             <a href="/usr/home/about" class="btn btn-link">
                     <span>
                         <i class="fa-solid fa-circle-info mr-1"></i>
-                        <span th:text="#{c.whatIsThisService}"></span>&nbsp;
+                        <span class="normal-case" th:text="#{c.whatIsThisService}"></span>&nbsp;
                     </span>
             </a>
         </div>
