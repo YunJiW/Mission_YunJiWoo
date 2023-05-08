@@ -130,11 +130,17 @@ public class LikeablePersonController {
         return rq.redirectWithMsg("/usr/likeablePerson/list",rsData);
     }
 
-    //아직 구현 안됨.
+    //내가 호감 표시한 사람 목록
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    @ResponseBody
     public String showToList(Model model){
+        InstaMember instaMember = rq.getMember().getInstaMember();
+
+        if(instaMember != null){
+            List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+
+            model.addAttribute("likeabelPerson",likeablePeople);
+        }
         return "usr/likeablePerson/toList";
     }
 

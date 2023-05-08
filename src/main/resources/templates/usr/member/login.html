@@ -53,7 +53,7 @@
                     <i class="fa-solid fa-arrow-right-to-bracket"></i>
                     시작하기
                 </h1>
-                <th:block th:if="${@rq.refererAdminPage}">
+                <th:block th:if="${@rq.refererAdminPage or param.admin != null }">
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">아이디</span>
@@ -97,8 +97,12 @@
         </div>
 
         <div class="flex flex-wrap justify-center">
-            <a href="#" class="btn btn-link">아이디찾기</a>
-            <a href="#" class="btn btn-link">비밀번호찾기</a>
+            <a href="/usr/home/about" class="btn btn-link">
+                    <span>
+                        <i class="fa-solid fa-circle-info mr-1"></i>
+                        <span th:text="#{c.whatIsThisService}"></span>&nbsp;
+                    </span>
+            </a>
         </div>
     </form>
 
