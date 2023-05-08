@@ -53,21 +53,21 @@
                             <span class="label-text">
                         <i class="fa-brands fa-instagram"></i>인스타 아이디</span>
                         </label>
-                        <input type="text" name="username" placeholder="인스타아이디" class="input input-bordered" autofocus
-                               onchange="$(this).keyup();"
-                               onkeyup="$(this).next().children(':last-child').text(this.value.trim());"
-                               onpaste="setTimeoutZero(() => $(this).keyup());" value="abcd"/>
                         <a href="#" onclick="$(this).attr('href', $(this).text().replaceAll(' ', ''));" target="_blank"
-                           class="block mt-3 text-sm break-all">
+                           class="block mb-3 text-sm break-all">
                             <span>https://instagram.com/</span><span class="text-red-300"></span>
                         </a>
-                        <script>
-            // input : 태그가 input 인 녀석 선택
-            // input[name="username"] 태그가 input 이고 name 속성의 값이 username 인 녀석을 선택
-            // input[name="username"]:last : 태그가 input 이고 name 속성의 값이 username 인 녀석들 중에서 꼴등 한명 선택
-            // .keyup(); : 강제로 keyup 이벤트 트리거(이벤트를 강제로 발동시킨다.)
-            $(`input[name="username"]:last`).keyup();
-                        </script>
+                        <input type="text" name="username" placeholder="인스타 아이디" class="input input-bordered" autofocus
+                               onchange="$(this).keyup();"
+                               onkeyup="$(this).prev().children(':last-child').text(this.value.trim());"
+                               onpaste="setTimeoutZero(() => $(this).keyup());"/>
+                        <!--
+                        // input : 태그가 input 인 녀석 선택
+                        // input[name="username"] 태그가 input 이고 name 속성의 값이 username 인 녀석을 선택
+                        // input[name="username"]:last : 태그가 input 이고 name 속성의 값이 username 인 녀석들 중에서 꼴등 한명 선택
+                        // .keyup(); : 강제로 keyup 이벤트 트리거(이벤트를 강제로 발동시킨다.)
+                        $(`input[name="username"]:last`).keyup();
+                        -->
                     </div>
 
                     <div class="form-control mb-4">
