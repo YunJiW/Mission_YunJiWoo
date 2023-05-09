@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/usr/likeablePerson")
@@ -131,27 +133,26 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showTogender(@RequestParam(value = "gender", defaultValue = "") String gender, Model model) {
+    public String showTogender(Model model,String gender,@RequestParam(defaultValue = "0") int attractiveTypeCode){
         InstaMember instaMember = rq.getMember().getInstaMember();
 
-        List<LikeablePerson> likeablePeople;
         if(instaMember != null){
-            likeablePeople = instaMember.getToLikeablePeople();
+            Stream<LikeablePerson> likeablePeopleStream = instaMember.getToLikeablePeople().stream();
 
-            if(gender.equals("")){
-                model.addAttribute("likeablePeople",likeablePeople);
+            if(gender != null)
+            {
+                likeablePeopleStream = likeablePeopleStream.filter(likeablePerson -> likeablePerson.getFromInstaMember().getGender().equals(gender));
             }
-            else{
-                List<LikeablePerson> toListGender = new ArrayList<>();
+            if(attractiveTypeCode != 0){
+                likeablePeopleStream = likeablePeopleStream.filter(likeablePerson -> likeablePerson.getAttractiveTypeCode() == attractiveTypeCode);
+            }
 
-                for(LikeablePerson lk : likeablePeople){
-                    if(lk.getFromInstaMember().getGender().equals(gender)){
-                        toListGender.add(lk);
-                    }
-                }
-                model.addAttribute("likeablePeople",toListGender);
-            }
+
+            List<LikeablePerson> likeablePeople = likeablePeopleStream.collect(Collectors.toList());
+            model.addAttribute("likeablePeople",likeablePeople);
         }
+
+
         return "usr/likeablePerson/toList";
     }
 
