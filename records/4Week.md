@@ -26,6 +26,14 @@
 
 **[접근 방법]**
 
+# 필수미션 - 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 성별 필터링기능 구현
+
+첫번째 커밋 생각
+- 간단하게 생각해서 현재 ToList가 호감을 표시한 사람들을 모아놔서 List를 뽑아 오는 것으로
+- 거기서 그러면 ReQuestParam을 받아서 default값을 ""로 두고 디폴트 값일경우 -> 그냥 likeablePeople을 model에 추가해주고
+- 아닐경우 -> toListGender에 gender가 맞는 것들을 다시 한번 뽑아서 model에 추가하는 형식으로 진행하였습니다. (다듬을 예정.)
+
+
 
 
 **[특이사항]**
