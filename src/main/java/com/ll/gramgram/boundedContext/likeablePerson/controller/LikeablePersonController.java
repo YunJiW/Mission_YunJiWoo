@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -133,20 +134,39 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showTogender(Model model,String gender,@RequestParam(defaultValue = "0") int attractiveTypeCode){
+    public String showTogender(Model model,String gender,@RequestParam(defaultValue = "0") int attractiveTypeCode,int sortCode){
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         if(instaMember != null){
             Stream<LikeablePerson> likeablePeopleStream = instaMember.getToLikeablePeople().stream();
 
+            //성별
             if(gender != null)
             {
                 likeablePeopleStream = likeablePeopleStream.filter(likeablePerson -> likeablePerson.getFromInstaMember().getGender().equals(gender));
             }
+            //호감 코드
             if(attractiveTypeCode != 0){
                 likeablePeopleStream = likeablePeopleStream.filter(likeablePerson -> likeablePerson.getAttractiveTypeCode() == attractiveTypeCode);
             }
-
+            //순위 정렬
+            switch (sortCode){
+                //날짜순 정렬
+                case 2:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getId));
+                    break;
+                    //인기순
+                case 3:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(lp -> ((LikeablePerson)lp).getFromInstaMember().getLikes()).reversed());
+                    break;
+                case 4:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(lp -> lp.getFromInstaMember().getLikes()));
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+            }
 
             List<LikeablePerson> likeablePeople = likeablePeopleStream.collect(Collectors.toList());
             model.addAttribute("likeablePeople",likeablePeople);
