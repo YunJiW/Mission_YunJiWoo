@@ -11,15 +11,16 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/usr/likeablePerson")
@@ -39,7 +40,7 @@ public class LikeablePersonController {
     public static class LikeForm {
 
         @NotBlank
-        @Size(min = 3,max = 30)
+        @Size(min = 3, max = 30)
         private final String username;
 
         @NotNull
@@ -77,42 +78,43 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}")
-    public String delete(@PathVariable("id")Long id){
+    public String delete(@PathVariable("id") Long id) {
         LikeablePerson likeablePerson = this.likeablePersonService.FindById(id).orElse(null);
 
-        RsData canActorDeleteRsData= likeablePersonService.CanActorDelete(rq.getMember(),likeablePerson);
-        if(canActorDeleteRsData.isFail())
+        RsData canActorDeleteRsData = likeablePersonService.CanActorDelete(rq.getMember(), likeablePerson);
+        if (canActorDeleteRsData.isFail())
             return rq.historyBack(canActorDeleteRsData);
 
 
         RsData deleteRsData = likeablePersonService.delete(likeablePerson);
-        if(deleteRsData.isFail()){
+        if (deleteRsData.isFail()) {
             rq.historyBack(deleteRsData);
         }
 
 
-        return rq.redirectWithMsg("/usr/likeablePerson/list",deleteRsData);
+        return rq.redirectWithMsg("/usr/likeablePerson/list", deleteRsData);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String showModify(@PathVariable Long id, Model model){
+    public String showModify(@PathVariable Long id, Model model) {
         LikeablePerson likeablePerson = likeablePersonService.findById(id).orElseThrow();
 
-        RsData canModifyRsData = likeablePersonService.canModifyLike(rq.getMember(),likeablePerson);
+        RsData canModifyRsData = likeablePersonService.canModifyLike(rq.getMember(), likeablePerson);
 
-        if(canModifyRsData.isFail()){
+        if (canModifyRsData.isFail()) {
             return rq.historyBack(canModifyRsData);
         }
 
-        model.addAttribute("likeablePerson",likeablePerson);
+        model.addAttribute("likeablePerson", likeablePerson);
 
         return "usr/likeablePerson/modify";
 
     }
+
     @AllArgsConstructor
     @Getter
-    public static class ModifyForm{
+    public static class ModifyForm {
         @NotNull
         @Min(1)
         @Max(3)
@@ -121,27 +123,34 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String modify(@PathVariable Long id, @Valid ModifyForm modifyForm){
-        RsData<LikeablePerson> rsData = likeablePersonService.modifyLike(rq.getMember(),id,modifyForm.getAttractiveTypeCode());
+    public String modify(@PathVariable Long id, @Valid ModifyForm modifyForm) {
+        RsData<LikeablePerson> rsData = likeablePersonService.modifyLike(rq.getMember(), id, modifyForm.getAttractiveTypeCode());
 
-        if(rsData.isFail()){
+        if (rsData.isFail()) {
             return rq.historyBack(rsData);
         }
-        return rq.redirectWithMsg("/usr/likeablePerson/list",rsData);
+        return rq.redirectWithMsg("/usr/likeablePerson/list", rsData);
     }
 
-    //내가 호감 표시한 사람 목록
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showToList(Model model){
+    public String showTogender(Model model,String gender,@RequestParam(defaultValue = "0") int attractiveTypeCode,@RequestParam(defaultValue = "0") int sortCode){
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         if(instaMember != null){
-            List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
-
-            model.addAttribute("likeabelPerson",likeablePeople);
+            List<LikeablePerson> likeablePeople = likeablePersonService.findByToInstaMember(instaMember,gender,attractiveTypeCode,sortCode);
+            model.addAttribute("likeablePeople",likeablePeople);
         }
+
+
         return "usr/likeablePerson/toList";
+    }
+
+    //호감 표시한것중 필터링용
+    @AllArgsConstructor
+    @Getter
+    public static class toListForm {
+        private String gender;
     }
 
 }
