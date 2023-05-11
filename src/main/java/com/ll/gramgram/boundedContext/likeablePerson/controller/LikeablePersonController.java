@@ -155,16 +155,21 @@ public class LikeablePersonController {
                 case 2:
                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getId));
                     break;
-                    //인기순
+                    //인기 내림차순
                 case 3:
                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(lp -> ((LikeablePerson)lp).getFromInstaMember().getLikes()).reversed());
                     break;
+                    //인기 오름차순
                 case 4:
                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(lp -> lp.getFromInstaMember().getLikes()));
                     break;
+                    //성별 순
                 case 5:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing((LikeablePerson lp) -> lp.getFromInstaMember().getGender()).reversed());
                     break;
+                    //호감 사유 순
                 case 6:
+                    likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getAttractiveTypeCode).thenComparing(Comparator.comparing(LikeablePerson::getId)).reversed());
                     break;
             }
 
